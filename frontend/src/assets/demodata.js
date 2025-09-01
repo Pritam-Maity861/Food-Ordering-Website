@@ -1,0 +1,253 @@
+export const demoData=[]
+/**
+ [
+    {
+      "_id": "689762b96834759ddf345f38",
+      "ownerId": "688f7bf28049cb926cc9e85b",
+      "name": "Tasty Bites",
+      "description": "Delicious home-style meals with a modern twist.",
+      "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQgu8gYQ1FqtRFQSxhNr2cso0dPqSMSY-ABxA&s",
+      "heroImage": "https://res.cloudinary.com/dlwf1pegc/image/upload/v1754751672/Document2.jpg",
+      "street": "123 Maple Street",
+      "city": "New York",
+      "country": "USA",
+      "lat": 40.7128,
+      "lng": -74.0060,
+      "isApproved": true,
+      "rating": 0,
+      "phone": "1234567890",
+      "email": "tastybites@gmail.com",
+      "createdAt": "2025-08-09T15:01:13.133Z",
+      "updatedAt": "2025-08-09T15:07:33.809Z",
+      "__v": 0
+    },
+    {
+      "_id": "689762b96834759ddf345f39",
+      "ownerId": "688f7bf28049cb926cc9e85c",
+      "name": "Curry Express",
+      "description": "Fast and flavorful Indian cuisine.",
+      "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSArkE8ug_aNv82OfMlrzxTTzf0uxUKy39xLQ&s",
+      "heroImage": "https://res.cloudinary.com/demo/image/upload/v1754751673/curry_hero.jpg",
+      "street": "456 Spice Lane",
+      "city": "Chicago",
+      "country": "USA",
+      "lat": 41.8781,
+      "lng": -87.6298,
+      "isApproved": false,
+      "rating": 4.2,
+      "phone": "9876543210",
+      "email": "curryexpress@example.com",
+      "createdAt": "2025-08-08T11:20:00.000Z",
+      "updatedAt": "2025-08-09T10:15:00.000Z",
+      "__v": 0
+    },
+    {
+      "_id": "689762b96834759ddf345f40",
+      "ownerId": "688f7bf28049cb926cc9e85d",
+      "name": "The Garden Grill",
+      "description": "Fresh vegetarian meals and organic juices.",
+      "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRjZWxF857wSQn-JXkXtibHxZpX4xmyj1p6tA&s",
+      "heroImage": "https://res.cloudinary.com/demo/image/upload/v1754751674/garden_hero.jpg",
+      "street": "789 Green Road",
+      "city": "San Francisco",
+      "country": "USA",
+      "lat": 37.7749,
+      "lng": -122.4194,
+      "isApproved": true,
+      "rating": 4.8,
+      "phone": "1122334455",
+      "email": "contact@gardengrill.com",
+      "createdAt": "2025-08-07T09:10:00.000Z",
+      "updatedAt": "2025-08-09T13:05:00.000Z",
+      "__v": 0
+    },
+    {
+      "_id": "689762b96834759ddf345f41",
+      "ownerId": "688f7bf28049cb926cc9e85e",
+      "name": "Sushi Zen",
+      "description": "Authentic sushi bar with traditional flavors.",
+      "logo": "https://res.cloudinary.com/demo/image/upload/v1754751671/sushi_logo.png",
+      "heroImage": "https://res.cloudinary.com/demo/image/upload/v1754751675/sushi_hero.jpg",
+      "street": "101 Ocean Drive",
+      "city": "Los Angeles",
+      "country": "USA",
+      "lat": 34.0522,
+      "lng": -118.2437,
+      "isApproved": true,
+      "rating": 4.9,
+      "phone": "5566778899",
+      "email": "zen@sushizen.com",
+      "createdAt": "2025-08-06T13:05:00.000Z",
+      "updatedAt": "2025-08-09T11:00:00.000Z",
+      "__v": 0
+    },
+    {
+      "_id": "689762b96834759ddf345f42",
+      "ownerId": "688f7bf28049cb926cc9e85f",
+      "name": "Pasta Paradise",
+      "description": "Homemade pasta and Italian classics.",
+      "logo": "https://res.cloudinary.com/demo/image/upload/v1754751670/pasta_logo.png",
+      "heroImage": "https://res.cloudinary.com/demo/image/upload/v1754751676/pasta_hero.jpg",
+      "street": "102 Italian Street",
+      "city": "Rome",
+      "country": "Italy",
+      "lat": 41.9028,
+      "lng": 12.4964,
+      "isApproved": true,
+      "rating": 4.7,
+      "phone": "3344556677",
+      "email": "info@pastaparadise.it",
+      "createdAt": "2025-08-05T16:10:00.000Z",
+      "updatedAt": "2025-08-09T14:50:00.000Z",
+      "__v": 0
+    },
+    {
+      "_id": "689762b96834759ddf345f43",
+      "ownerId": "688f7bf28049cb926cc9e85g",
+      "name": "Bakery Delights",
+      "description": "Freshly baked bread, pastries, and desserts.",
+      "logo": "https://res.cloudinary.com/demo/image/upload/v1754751672/bakery_logo.png",
+      "heroImage": "https://res.cloudinary.com/demo/image/upload/v1754751677/bakery_hero.jpg",
+      "street": "789 Sweet Lane",
+      "city": "Paris",
+      "country": "France",
+      "lat": 48.8566,
+      "lng": 2.3522,
+      "isApproved": false,
+      "rating": 4.0,
+      "phone": "4455667788",
+      "email": "contact@bakerydelights.fr",
+      "createdAt": "2025-08-04T14:40:00.000Z",
+      "updatedAt": "2025-08-09T09:10:00.000Z",
+      "__v": 0
+    },
+    {
+      "_id": "689762b96834759ddf345f44",
+      "ownerId": "688f7bf28049cb926cc9e85h",
+      "name": "Burgers & Fries",
+      "description": "Gourmet burgers with fresh hand-cut fries.",
+      "logo": "https://res.cloudinary.com/demo/image/upload/v1754751673/burger_logo.png",
+      "heroImage": "https://res.cloudinary.com/demo/image/upload/v1754751678/burger_hero.jpg",
+      "street": "333 Burger Lane",
+      "city": "London",
+      "country": "UK",
+      "lat": 51.5074,
+      "lng": -0.1278,
+      "isApproved": true,
+      "rating": 4.3,
+      "phone": "2233445566",
+      "email": "info@burgersandfries.co.uk",
+      "createdAt": "2025-08-03T13:00:00.000Z",
+      "updatedAt": "2025-08-09T12:30:00.000Z",
+      "__v": 0
+    }
+  ]
+ */
+
+export const FoodItemData=[]
+
+/*
+[
+  {
+    "restaurant": "64f123abc1234567890abcd1",
+    "name": "Paneer Butter Masala",
+    "description": "Creamy and rich North Indian curry made with cottage cheese in a buttery tomato sauce.",
+    "price": 240,
+    "offerPrice": 235,
+    "category": "NorthIndian",
+    "image": "https://www.vegrecipesofindia.com/wp-content/uploads/2020/01/paneer-butter-masala-5.jpg",
+    "isAvailable": true
+  },
+  {
+    "restaurant": "64f123abc1234567890abcd2",
+    "name": "Masala Dosa",
+    "description": "Crispy South Indian crepe filled with spicy mashed potatoes, served with chutney and sambar.",
+    "price": 120,
+    "offerPrice": 110,
+    "category": "SouthIndian",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT4sjxaooBtw7ZY8XdJxRo0SSoRieb80OVOLQ&s",
+    "isAvailable": true
+  },
+  {
+    "restaurant": "64f123abc1234567890abcd3",
+    "name": "Chilli Chicken",
+    "description": "Spicy Indo-Chinese chicken dish with bell peppers and onions tossed in a tangy sauce.",
+    "price": 180,
+    "offerPrice": 170,
+    "category": "Chinese",
+    "image": "https://example.com/images/chilli-chicken.jpg",
+    "isAvailable": true
+  },
+  {
+    "restaurant": "64f123abc1234567890abcd4",
+    "name": "Margherita Pizza",
+    "description": "Classic Italian pizza topped with tomato sauce, mozzarella cheese, and fresh basil.",
+    "price": 300,
+    "offerPrice": 295,
+    "category": "Pizza",
+    "image": "https://example.com/images/margherita-pizza.jpg",
+    "isAvailable": true
+  },
+  {
+    "restaurant": "64f123abc1234567890abcd5",
+    "name": "Grilled Chicken Sandwich",
+    "description": "Juicy grilled chicken breast served in a toasted bun with fresh lettuce and mayo.",
+    "price": 150,
+    "offerPrice": 135,
+    "category": "Sandwich",
+    "image": "https://example.com/images/grilled-chicken-sandwich.jpg",
+    "isAvailable": true
+  },
+  {
+    "restaurant": "64f123abc1234567890abcd6",
+    "name": "Butter Chicken Biryani",
+    "description": "A rich fusion of butter chicken and aromatic biryani rice, spiced to perfection.",
+    "price": 280,
+    "offerPrice": 210,
+    "category": "Biryani",
+    "image": "https://example.com/images/butter-chicken-biryani.jpg",
+    "isAvailable": true
+  },
+  {
+    "restaurant": "64f123abc1234567890abcd7",
+    "name": "Chocolate Brownie Sundae",
+    "description": "Warm chocolate brownie topped with vanilla ice cream, hot fudge, and nuts.",
+    "price": 160,
+    "offerPrice": 110,
+    "category": "Desserts",
+    "image": "https://example.com/images/brownie-sundae.jpg",
+    "isAvailable": true
+  },
+  {
+    "restaurant": "64f123abc1234567890abcd8",
+    "name": "Fresh Watermelon Juice",
+    "description": "Refreshing and naturally sweet watermelon juice served chilled.",
+    "price": 90,
+    "offerPrice": 80,
+    "category": "JuicesAndSmoothies",
+    "image": "https://example.com/images/watermelon-juice.jpg",
+    "isAvailable": true
+  },
+  {
+    "restaurant": "64f123abc1234567890abcd9",
+    "name": "Chicken Momos",
+    "description": "Steamed dumplings filled with spiced chicken mince, served with spicy chutney.",
+    "price": 110,
+    "offerPrice": 105,
+    "category": "Momos",
+    "image": "https://example.com/images/chicken-momos.jpg",
+    "isAvailable": true
+  },
+  {
+    "restaurant": "64f123abc1234567890abc10",
+    "name": "Tandoori Paneer Tikka",
+    "description": "Chunks of paneer marinated in spices and grilled in a traditional tandoor.",
+    "price": 200,
+    "offerPrice": 190,
+    "category": "Tandoori",
+    "image": "https://example.com/images/paneer-tikka.jpg",
+    "isAvailable": true
+  }
+] */
+
+  
