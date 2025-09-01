@@ -3,6 +3,7 @@ import axiosInstance from "../utils/axiosInstance";
 import { CartContext } from "../context/cartContext/CartContext";
 import AddressForm from "../components/AddressForm";
 import axios from "axios";
+import { toast } from "react-hot-toast";
 
 const CartDetails = () => {
   const [showAddress, setShowAddress] = useState(false);
@@ -80,6 +81,7 @@ const CartDetails = () => {
 
       console.log("Order placed:", data);
       setOrderMessage( data.message);
+      toast.success("Order placed successfully!");
 
       // Clear cart after placing order
       const response = await axiosInstance.delete("/cart/deleteCart");

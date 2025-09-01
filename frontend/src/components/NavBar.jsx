@@ -61,10 +61,14 @@ const Navbar = () => {
           <Link smooth to="/#home">Home</Link>
           </li>
           <li className="text-gray-600 hover:text-indigo-500 hover:border-b-2 border-indigo-500 transition">
-            <Link  to={"/allRestaurents"} >Restaurants</Link>
+            <button 
+            onClick={isLoggedIn?()=>nevigate("/allRestaurents"):()=>nevigate("/login")}
+            >Restaurants</button>
           </li>
           <li className="text-gray-600 hover:text-indigo-500 hover:border-b-2 border-indigo-500 transition">
-            <Link to="/allFoods" >Our Foods</Link>
+            <button 
+            onClick={isLoggedIn?()=>nevigate("/allFoods"):()=>nevigate("/login")}
+            >Our Foods</button>
           </li>
           <li className="text-gray-600 hover:text-indigo-500 hover:border-b-2 border-indigo-500 transition">
           <Link smooth to="/#about">About Us</Link>
