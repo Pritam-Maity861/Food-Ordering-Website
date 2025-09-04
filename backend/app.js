@@ -14,10 +14,13 @@ const app=express();
 dotenv.config();
 
 //middlewares...
-app.use(cors(
-  {origin: "http://localhost:5173", 
-  credentials: true} 
-));
+app.use(cors({
+  origin: [
+    "https://food-ordering-website-frontend-ru03.onrender.com", 
+    "http://localhost:5173"
+  ],
+  credentials: true
+}));
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use(cookieParser());
