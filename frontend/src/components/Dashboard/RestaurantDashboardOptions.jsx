@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axiosInstance from "../../utils/axiosInstance";
 import toast from "react-hot-toast";
+import { API_BASE_URL } from "../../config";
 
 export const RestaurantDashboardContent = () => {
   const [allOrders, setAllOrders] = useState([]);
@@ -376,7 +377,7 @@ export const MenuManagementContent = () => {
     const fetchFoodData = async () => {
       try {
         const { data } = await axios.get(
-          "http://localhost:8000/api/v1/foodItems/getAllFood"
+          `${API_BASE_URL}/foodItems/getAllFood`
         );
         setFoodData(data.data);
         setFilteredFood(data.data);

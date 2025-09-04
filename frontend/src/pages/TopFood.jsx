@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { API_BASE_URL } from "../config";
 
 const TopFood = () => {
   const navigate = useNavigate();
@@ -37,7 +38,7 @@ const TopFood = () => {
     const fetchFoodData = async () => {
       try {
         const { data } = await axios.get(
-          "http://localhost:8000/api/v1/foodItems/getAllFood"
+          `${API_BASE_URL}/foodItems/getAllFood`
         );
         // const {data}=await axiosInstance.get("/foodItems/getAllFood");
         console.log(data);

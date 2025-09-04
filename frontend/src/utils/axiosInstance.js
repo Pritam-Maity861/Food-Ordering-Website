@@ -1,8 +1,9 @@
 import axios from "axios";
+import { API_BASE_URL } from "../config";
 
 // Create main axios instance
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:8000/api/v1/",
+  baseURL:API_BASE_URL,
   withCredentials: true, 
 });
 
@@ -62,7 +63,7 @@ axiosInstance.interceptors.response.use(
       try {
        
         const res = await axios.post(
-          "http://localhost:8000/api/v1/auth/refreshAccessToken",
+          `${API_BASE_URL}/auth/refreshAccessToken`,
           {},
           { withCredentials: true }
         );

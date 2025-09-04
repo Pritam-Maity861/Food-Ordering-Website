@@ -4,6 +4,7 @@ import { IoArrowBackOutline } from "react-icons/io5";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { AuthContext } from "../context/authContext";
+import { API_BASE_URL } from "../config";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -29,7 +30,7 @@ const Login = () => {
 
     try {
       const { data } = await axios.post(
-        "http://localhost:8000/api/v1/auth/signin",
+        `${API_BASE_URL}/auth/signin`,
         formData,
         { withCredentials: true }
       );

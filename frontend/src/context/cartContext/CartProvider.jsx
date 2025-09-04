@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { CartContext } from "./CartContext.js";
 // import axiosInstance from "../../utils/axiosInstance.js";
 import axios from "axios";
+import { API_BASE_URL } from "../../config.js";
 
 const CartProvider = ({ children }) => {
   const [totalCartItems, setTotalCartItems] = useState([]);
@@ -9,7 +10,7 @@ const CartProvider = ({ children }) => {
   // fetch cart data
   const fetchCart = useCallback(async () => {
     try {
-      const { data } = await axios.get("http://localhost:8000/api/v1/cart/getCart"
+      const { data } = await axios.get(`${API_BASE_URL}/cart/getCart`
         , { 
           headers: {
             authorization: `Bearer ${localStorage.getItem("accessToken")}`,

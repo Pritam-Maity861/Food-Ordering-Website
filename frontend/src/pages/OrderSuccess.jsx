@@ -4,6 +4,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import axiosInstance from "../utils/axiosInstance";
 import { CartContext } from "../context/cartContext/CartContext";
+import { API_BASE_URL } from "../config";
 
 const OrderSuccess = () => {
   const [searchParams] = useSearchParams();
@@ -23,7 +24,7 @@ const OrderSuccess = () => {
 
         // Verify payment
         await axios.post(
-          "http://localhost:8000/api/v1/order/verify-stripe-payment",
+          `${API_BASE_URL}/order/verify-stripe-payment`,
           { sessionId },
           { withCredentials: true }
         );

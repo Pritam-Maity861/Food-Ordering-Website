@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { IoArrowBackOutline } from "react-icons/io5";
 import toast from "react-hot-toast";
 import axios from "axios";
+import { API_BASE_URL } from "../config";
 
 const Register = () => {
   const navigate=useNavigate();
@@ -53,7 +54,7 @@ const Register = () => {
       }
 
      
-     const {data}=await axios.post('http://localhost:8000/api/v1/auth/register', formDataToSubmit);
+     const {data}=await axios.post(`${API_BASE_URL}/auth/register`, formDataToSubmit);
      console.log(data);
      navigate("/login")
      toast.success("Account created successfully!");

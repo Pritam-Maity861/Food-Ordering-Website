@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/NavBar";
 import Footer from "../components/Footer";
+import { API_BASE_URL } from "../config";
 
 const AllRestaurent = () => {
   const [restuData, setRestuData] = useState([]);
@@ -12,7 +13,7 @@ const AllRestaurent = () => {
     const fetchData = async () => {
       try {
         const { data } = await axios.get(
-          "http://localhost:8000/api/v1/resturent/getAllResturent"
+          `${API_BASE_URL}/resturent/getAllResturent`
         );
         setRestuData(data.data);
       } catch (error) {

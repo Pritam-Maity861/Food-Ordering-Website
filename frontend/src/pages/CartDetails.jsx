@@ -5,6 +5,7 @@ import AddressForm from "../components/AddressForm";
 import axios from "axios";
 import { toast } from "react-hot-toast";
 import {loadStripe} from '@stripe/stripe-js';
+import { API_BASE_URL } from "../config";
 
 const CartDetails = () => {
   const [showAddress, setShowAddress] = useState(false);
@@ -21,7 +22,7 @@ const CartDetails = () => {
   useEffect(() => {
     const fetchCartdata = async () => {
       try {
-        const { data } = await axios.get("http://localhost:8000/api/v1/cart/getCart",
+        const { data } = await axios.get(`${API_BASE_URL}/cart/getCart`,
         {headers: { authorization: `Bearer ${localStorage.getItem("accessToken")}` }}
         );
         setCartData(data.data);
@@ -73,7 +74,7 @@ const CartDetails = () => {
   
     try {
       if (paymentMethod === "Stripe") {
-        const stripe = await loadStripe(
+        const _stripe = await loadStripe(
           "pk_test_51S1L8I7ZOHQPYIcxeTUVrMHoxVmMfBWvF9qai0DcgjkIdpUs98B0jtNN1M97ObkNldukpUPuhNi0PTXX3r4QzIXK00NqsjJdFb"
         );
   

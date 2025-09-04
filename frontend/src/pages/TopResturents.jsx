@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import {useNavigate} from "react-router-dom"
+import { API_BASE_URL } from "../config";
 
 const TopResturents = () => {
   const scrollRef = useRef(null);
@@ -34,7 +35,7 @@ const TopResturents = () => {
     const fetchData = async () => {
       try {
         const { data } = await axios.get(
-          "http://localhost:8000/api/v1/resturent/getAllResturent"
+          `${API_BASE_URL}/resturent/getAllResturent`
         );
         // console.log(data);
         setRestuData(data.data);

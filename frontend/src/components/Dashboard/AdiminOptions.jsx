@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axiosInstance from "../../utils/axiosInstance";
 import toast from "react-hot-toast";
 import axios from "axios";
+import { API_BASE_URL } from "../../config";
 
 export const AdminDashboardContent = () => (
     <div className="space-y-6">
@@ -83,7 +84,7 @@ export const RestaurantsContent = () => {
 
     useEffect(() => {
         const fetchAllRestaurants=async () => {
-          const {data}=await axios.get("http://localhost:8000/api/v1/resturent/getAllResturent");
+          const {data}=await axios.get(`${API_BASE_URL}/resturent/getAllResturent`);
           setRestaurents(data.data);    
         }
         fetchAllRestaurants();
