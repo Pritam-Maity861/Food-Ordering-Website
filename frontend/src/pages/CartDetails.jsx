@@ -4,14 +4,16 @@ import { CartContext } from "../context/cartContext/CartContext";
 import AddressForm from "../components/AddressForm";
 import axios from "axios";
 import { toast } from "react-hot-toast";
+import {loadStripe} from '@stripe/stripe-js';
 
 const CartDetails = () => {
   const [showAddress, setShowAddress] = useState(false);
-  const [cartData, setCartData] = useState(null);
+  const [cartData, setCartData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [paymentMethod, setPaymentMethod] = useState("Cash on delivery");
   const [deliveryAddress, setDeliveryAddress] = useState(null);
   const [orderMessage, setOrderMessage] = useState("");
+  // const strigifyCartdata = JSON.stringify(cartData);
 
   const { fetchCart } = useContext(CartContext);
 
@@ -32,6 +34,8 @@ const CartDetails = () => {
     fetchCartdata();
   }, []);
 
+
+  
   // Update quantity
   const handleQuantityChange = async (foodItemId, newQuantity) => {
     try {
@@ -62,15 +66,45 @@ const CartDetails = () => {
     }
   };
 
-  // Place order
   const handlePlaceOrder = async () => {
     if (!deliveryAddress) {
       return setOrderMessage(" Please select or add a delivery address.");
     }
-
+  
     try {
+      if (paymentMethod === "Stripe") {
+        const stripe = await loadStripe(
+          "pk_test_51S1L8I7ZOHQPYIcxeTUVrMHoxVmMfBWvF9qai0DcgjkIdpUs98B0jtNN1M97ObkNldukpUPuhNi0PTXX3r4QzIXK00NqsjJdFb"
+        );
+  
+        const response = await axiosInstance.post(
+          "/order/stripe/create-checkout-session",
+          {
+            products: cartData.items.map((item) => ({
+              foodItemId: item.foodItemId, // backend expects full foodItemId object
+              quantity: item.quantity,
+            })),
+            resturentId: cartData.restaurantId,
+            address: deliveryAddress, // send address properly
+          },
+          {
+            headers: {
+              "authorization": `Bearer ${localStorage.getItem("accessToken")}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+  
+        const sessionUrl = response.data.data.url;
+  
+        // Redirect to Stripe checkout
+        window.location.href = sessionUrl;
+        return;
+      }
+  
+      // COD fallback
       const { data } = await axiosInstance.post("/order/placeOrder", {
-        resturentId: cartData.restaurantId, 
+        resturentId: cartData.restaurantId,
         items: cartData.items.map((item) => ({
           foodItemId: item.foodItemId._id,
           quantity: item.quantity,
@@ -78,20 +112,21 @@ const CartDetails = () => {
         deliveryAddress,
         paymentMethod,
       });
-
-      console.log("Order placed:", data);
-      setOrderMessage( data.message);
+  
+      setOrderMessage(data.message);
       toast.success("Order placed successfully!");
-
+  
       // Clear cart after placing order
-      const response = await axiosInstance.delete("/cart/deleteCart");
-      console.log("Cart cleared:", response.data);
+      await axios.delete("http://localhost:8000/api/v1/cart/deleteCart",{
+        headers: {
+          authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+        withCredentials: true,
+      });
+
+      setCartData({ items: [] });
       await fetchCart();
 
-      if (response.data.success) {
-        setCartData({ items: [] });
-       
-      }
     } catch (error) {
       console.error("Error placing order:", error);
       setOrderMessage(
@@ -99,6 +134,7 @@ const CartDetails = () => {
       );
     }
   };
+
 
   if (loading) return <p className="text-center py-10">Loading your cart...</p>;
   if (!cartData || cartData.items.length === 0)

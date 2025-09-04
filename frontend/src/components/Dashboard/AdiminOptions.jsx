@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axiosInstance from "../../utils/axiosInstance";
 import toast from "react-hot-toast";
+import axios from "axios";
 
 export const AdminDashboardContent = () => (
     <div className="space-y-6">
@@ -75,39 +76,79 @@ export const AdminDashboardContent = () => (
 );
 
 
-export const RestaurantsContent = () => (
-    <div className="space-y-6">
+export const RestaurantsContent = () => {
+    const [restaurents, setRestaurents] = useState([]);
+    const [_status,setStatus]=useState(false);
+
+
+    useEffect(() => {
+        const fetchAllRestaurants=async () => {
+          const {data}=await axios.get("http://localhost:8000/api/v1/resturent/getAllResturent");
+          setRestaurents(data.data);    
+        }
+        fetchAllRestaurants();
+    }, [])
+    console.log(restaurents)
+
+    const handleDeleteRes=async(restaurantId)=>{    
+            if (
+                !window.confirm(
+                "Are you sure you want to delete this Restaurant? This action cannot be undone."
+                )
+            ) {
+                return;
+            }
+    
+            try {
+                await axiosInstance.delete(`/resturent/deleteRes/${restaurantId}`);
+                setRestaurents(prevRes => prevRes.filter(res => res._id !== restaurantId));
+                toast.success("Restaurant deleted successfully");
+            } catch (error) {
+                console.error("Error deleting restaurant:", error);
+                toast.error("Something went wrong while deleteing restaurant.");
+            }
+        }
+
+        const handleUpdateStatus=async(restaurantId)=>{
+            try {
+                setStatus((prevStatus) => {
+                    const newStatus = !prevStatus;
+                    
+                    axiosInstance.put(`/resturent/aproveRes/${restaurantId}`, {
+                        isApproved: newStatus
+                    })
+                    .then(({ data }) => {
+                        console.log(data);
+                        setRestaurents(prevRes =>
+                            prevRes.map(res =>
+                                res._id === restaurantId ? { ...res, isApproved: newStatus } : res
+                            )
+                        );
+                        toast.success("Restaurant status updated successfully");
+                    })
+                    .catch(error => {
+                        console.error("Error updating restaurant status:", error);
+                        toast.error("Something went wrong while updating restaurant status.");
+                    });
+        
+                    return newStatus;
+                });}
+                 catch (error) {
+                console.error("Error updating restaurant status:", error);
+                toast.error("Something went wrong while updating restaurant status.");
+            }
+        }
+
+    return(
+        <div className="space-y-6">
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
                 <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-4 sm:mb-0">
                     Restaurant Management
                 </h1>
-                <div className="flex gap-2">
-                    <button className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg transition-colors duration-200 text-sm sm:text-base">
-                        Add Restaurant
-                    </button>
-                    <button className="border border-gray-300 hover:bg-gray-50 text-gray-700 px-4 py-2 rounded-lg transition-colors duration-200 text-sm sm:text-base">
-                        Export Data
-                    </button>
-                </div>
+                
             </div>
-            
-            {/* Filters */}
-            <div className="mb-6 flex flex-wrap gap-2">
-                {["All", "Active", "Inactive", "Pending", "Suspended"].map((filter, index) => (
-                    <button
-                        key={index}
-                        className={`px-4 py-2 rounded-full text-sm font-medium transition-colors duration-200 ${
-                            index === 0 
-                                ? "bg-indigo-100 text-indigo-800" 
-                                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                        }`}
-                    >
-                        {filter}
-                    </button>
-                ))}
-            </div>
-
+         
             {/* Restaurants Table */}
             <div className="overflow-x-auto">
                 <table className="w-full text-left">
@@ -117,19 +158,11 @@ export const RestaurantsContent = () => (
                             <th className="pb-3 text-sm font-medium text-gray-900">Owner</th>
                             <th className="pb-3 text-sm font-medium text-gray-900">Location</th>
                             <th className="pb-3 text-sm font-medium text-gray-900">Status</th>
-                            <th className="pb-3 text-sm font-medium text-gray-900">Orders</th>
-                            <th className="pb-3 text-sm font-medium text-gray-900">Revenue</th>
-                            <th className="pb-3 text-sm font-medium text-gray-900">Actions</th>
+                            <th className="pb-3 text-sm font-medium text-center text-gray-900">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {[
-                            { name: "Italian Bistro", owner: "Mario Rossi", location: "Downtown", status: "Active", orders: 1520, revenue: "$45,600" },
-                            { name: "Sushi Palace", owner: "Hiroshi Tanaka", location: "Midtown", status: "Active", orders: 890, revenue: "$32,400" },
-                            { name: "Burger House", owner: "John Smith", location: "Uptown", status: "Inactive", orders: 0, revenue: "$0" },
-                            { name: "Thai Garden", owner: "Somchai Lee", location: "Eastside", status: "Active", orders: 670, revenue: "$28,900" },
-                            { name: "Pizza Corner", owner: "Tony Soprano", location: "Westside", status: "Pending", orders: 0, revenue: "$0" }
-                        ].map((restaurant, index) => (
+                        {restaurents.map((restaurant, index) => (
                             <tr key={index} className="border-b border-gray-100">
                                 <td className="py-3">
                                     <div>
@@ -137,25 +170,29 @@ export const RestaurantsContent = () => (
                                         <p className="text-xs text-gray-500">ID: REST{index + 1001}</p>
                                     </div>
                                 </td>
-                                <td className="py-3 text-sm text-gray-600">{restaurant.owner}</td>
-                                <td className="py-3 text-sm text-gray-600">{restaurant.location}</td>
+                                <td className="py-3 text-sm text-gray-600">{restaurant.ownerId.name}</td>
+                                <td className="py-3 text-sm text-gray-600">{restaurant.city}</td>
                                 <td className="py-3">
                                     <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                                        restaurant.status === 'Active' ? 'bg-green-100 text-green-800' :
-                                        restaurant.status === 'Inactive' ? 'bg-red-100 text-red-800' :
+                                        restaurant.status === 'Approved' ? 'bg-green-100 text-green-800' :
+                                        restaurant.status === 'Pending' ? 'bg-red-100 text-red-800' :
                                         'bg-yellow-100 text-yellow-800'
                                     }`}>
-                                        {restaurant.status}
+                                        {restaurant.isApproved ? 'Approved' : 'Pending'}
                                     </span>
                                 </td>
-                                <td className="py-3 text-sm text-gray-600">{restaurant.orders}</td>
-                                <td className="py-3 text-sm font-medium text-gray-900">{restaurant.revenue}</td>
+                               
                                 <td className="py-3">
-                                    <div className="flex gap-2">
-                                        <button className="text-indigo-600 hover:text-indigo-800 text-sm">View</button>
-                                        <button className="text-yellow-600 hover:text-yellow-800 text-sm">Edit</button>
-                                        <button className="text-red-600 hover:text-red-800 text-sm">Suspend</button>
+                                    <div className="flex justify-center gap-5">
+                                       <button className="text-blue-600 hover:text-blue-800 text-sm"
+                                       onClick={() => handleUpdateStatus(restaurant._id)}
+                                       >Change status to {restaurant.isApproved ? 'Pending' : 'Approved'}</button>
+                                       <button className="text-red-600 hover:text-red-800 text-sm"
+                                       onClick={
+                                        () =>handleDeleteRes(restaurant._id)
+                                       }>Remove</button>
                                     </div>
+                                    
                                 </td>
                             </tr>
                         ))}
@@ -164,7 +201,8 @@ export const RestaurantsContent = () => (
             </div>
         </div>
     </div>
-);
+    )
+};
 
 
 export const UsersContent = () => {

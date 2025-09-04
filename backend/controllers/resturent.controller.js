@@ -100,7 +100,7 @@ export const addRestaurant = asyncHandler(async (req, res) => {
 
 //get all resturents ...
 export const getAllResturent = asyncHandler(async (req, res) => {
-  const getAllRes = await restaurantModel.find();
+  const getAllRes = await restaurantModel.find().populate("ownerId");
   if (!getAllRes) {
     throw new ApiError(400, "no resturent found.");
   }

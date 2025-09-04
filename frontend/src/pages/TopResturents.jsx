@@ -95,7 +95,8 @@ const TopResturents = () => {
               className="scroll-container flex gap-8 overflow-x-auto scroll-smooth"
             >
               {restuData.map((restaurant, index) => (
-                <div key={index}>
+                restaurant.isApproved&&(
+                  <div key={index}>
                   <div
                   onClick={() => isLoggedIn?navigate(`/resturent/${restaurant._id}`):navigate("/login")}
                   className="group min-w-[350px] max-w-[350px] min-h-[400px] rounded-xl shadow-lg bg-slate-100 cursor-pointer transition-all duration-200 ease-out hover:bg-gray-400">
@@ -119,6 +120,7 @@ const TopResturents = () => {
                     </div>
                   </div>
                 </div>
+                )
               ))}
             </div>
           </div>

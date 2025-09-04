@@ -102,7 +102,8 @@ const TopFood = () => {
               className="scroll-container flex gap-8 overflow-x-auto scroll-smooth"
             >
               {foodItemData.map((food, index) => (
-                <div
+                food.restaurant.isApproved&&(
+                  <div
                   key={index}
                   onClick={() => isLoggedIn?navigate(`/foodDetails/${food._id}`):navigate("/login")}
                   
@@ -131,6 +132,7 @@ const TopFood = () => {
                     </div>
                   </div>
                 </div>
+                )
               ))}
             </div>
           </div>

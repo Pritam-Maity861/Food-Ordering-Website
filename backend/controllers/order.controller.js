@@ -3,6 +3,11 @@ import orderModel from "../models/order.model.js";
 import { ApiError } from "../utils/apiError.js";
 import { ApiResponse } from "../utils/apiresponse.js";
 import asyncHandler from "../utils/asyncHandler.js";
+import Stripe from "stripe";
+
+
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 //create Order...
 export const createOrder = asyncHandler(async (req, res) => {
@@ -121,4 +126,111 @@ export const updateOrderStatus=asyncHandler(async (req,res) => {
 
 }
 )
+
+
+
+export const checkout = asyncHandler(async (req, res) => {
+  const { products, resturentId, address } = req.body;
+
+  if (!products || products.length === 0) {
+    throw new ApiError(400, "No products provided");
+  }
+
+  // Calculate total amount
+  const totalAmount = products.reduce((acc, item) => {
+    const price = item.foodItemId.offerPrice || item.foodItemId.price;
+    return acc + price * item.quantity;
+  }, 0);
+
+  const line_items = products.map((item) => ({
+    price_data: {
+      currency: "usd",
+      product_data: {
+        name: item.foodItemId.name,
+        images: [item.foodItemId.image],
+      },
+      unit_amount: (item.foodItemId.offerPrice || item.foodItemId.price) * 100,
+    },
+    quantity: item.quantity,
+  }));
+
+  // Create Stripe checkout session
+  const session = await stripe.checkout.sessions.create({
+    payment_method_types: ["card"],
+    mode: "payment",
+    line_items,
+    success_url: `${process.env.CLIENT_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url: `${process.env.CLIENT_URL}/cancel`,
+    metadata: {
+      userId: req.user.toString(),
+      resturentId: resturentId.toString(),
+      items: JSON.stringify(
+        products.map((p) => ({
+          itemId: p.foodItemId._id,
+          quantity: p.quantity,
+        }))
+      ),
+      deliveryAddress: JSON.stringify(address),
+      totalAmount: totalAmount.toString(),
+    },
+  });
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, { url: session.url }, "Checkout session created"));
+});
+
+
+//verify stripe payment...
+
+
+export const verifyStripePayment = async (req, res) => {
+  try {
+    const { sessionId } = req.body;
+    if (!sessionId) {
+      return res.status(400).json({ success: false, message: "Session ID is required" });
+    }
+
+    // Retrieve the checkout session from Stripe
+    const session = await stripe.checkout.sessions.retrieve(sessionId, {
+      expand: ["payment_intent"],
+    });
+
+    if (session.payment_status === "paid") {
+      let order = await orderModel.findOne({ _id: session.metadata.orderId });
+
+      if (order) {
+        order.paymentStatus = "Completed";
+        await order.save();
+      } else {
+        order = await orderModel.create({
+          userId: session.metadata.userId,
+          resturentId: session.metadata.resturentId,
+          items: JSON.parse(session.metadata.items),
+          totalAmount: Number(session.metadata.totalAmount),
+          deliveryAddress: JSON.parse(session.metadata.deliveryAddress),
+          paymentMethod: "Stripe",
+          paymentStatus: "Completed",
+        });
+      }
+
+      return res.json({
+        success: true,
+        message: "Payment verified & order placed successfully",
+        order,
+      });
+    } else {
+      return res.status(400).json({
+        success: false,
+        message: "Payment not completed",
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ success: false, message: "Server Error", error: error.message });
+  }
+};
+
 

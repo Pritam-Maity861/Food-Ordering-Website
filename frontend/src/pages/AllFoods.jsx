@@ -82,7 +82,8 @@ console.log(categories)
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {filteredFood.length > 0 ? (
             filteredFood.map((food, index) => (
-              <div
+              food.restaurant.isApproved&&(
+                <div
                 key={index}
                 onClick={() => navigate(`/foodDetails/${food._id}`)}
                 className="bg-white  border  border-gray-200 rounded-xl shadow-md hover:shadow-lg transition cursor-pointer overflow-hidden"
@@ -108,6 +109,7 @@ console.log(categories)
                       </p>
                 </div>
               </div>
+              )
             ))
           ) : (
             <p className="text-center col-span-full text-gray-500">No food items found.</p>

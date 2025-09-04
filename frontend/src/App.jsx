@@ -16,6 +16,8 @@ import RestaurentDashboard from "./pages/RestaurentDashboard";
 import AddResturentForm from "./components/Dashboard/components/AddResturentForm";
 import MyOrder from "./pages/MyOrder";
 import AddItemForm from "./components/Dashboard/components/AddItemForm";
+import OrderSuccess from "./pages/OrderSuccess";
+import OrderCancel from "./pages/OrderCancel";
 
 
 const App = () => {
@@ -42,6 +44,8 @@ const App = () => {
 
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/success" element={<OrderSuccess />} />
+        <Route path="/cancel" element={<OrderCancel />} />
 
         {isLoggedIn && (
           <>
