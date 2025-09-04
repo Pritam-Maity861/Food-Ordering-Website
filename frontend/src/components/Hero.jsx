@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import herologo from '../assets/hero-logo.png'; 
 import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../context/authContext';
+import { AuthContext } from '../context/AuthContext';
 
 
 const HeroSection = () => {

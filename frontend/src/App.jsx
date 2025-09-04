@@ -7,7 +7,7 @@ import Login from "./components/Login";
 import { Toaster } from "react-hot-toast";
 import FoodDetails from "./pages/FoodDetails";
 import RestaurentDetails from "./pages/RestaurentDetails";
-import { AuthContext } from "./context/authContext";
+import { AuthContext } from "./context/AuthContext";
 import CartDetails from "./pages/CartDetails";
 import AllRestaurent from "./pages/AllRestaurent";
 import AllFoods from "./pages/AllFoods";

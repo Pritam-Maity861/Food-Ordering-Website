@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react'
 import food_app_logo from "../assets/demo1.png";
 import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../context/authContext';
+import { AuthContext } from '../context/AuthContext';
 import { MenuManagementContent,  RestaurantDashboardContent,  RestaurantManagementContent } from '../components/Dashboard/RestaurantDashboardOptions';
 
 

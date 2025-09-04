@@ -3,7 +3,7 @@ import { Link, Navigate, useNavigate } from "react-router-dom";
 import { IoArrowBackOutline } from "react-icons/io5";
 import toast from "react-hot-toast";
 import axios from "axios";
-import { AuthContext } from "../context/authContext";
+import { AuthContext } from "../context/AuthContext";
 import { API_BASE_URL } from "../config";
 
 const Login = () => {

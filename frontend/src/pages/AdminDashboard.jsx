@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../context/authContext';
+import { AuthContext } from '../context/AuthContext';
 import food_app_logo from "../assets/demo1.png";
 import { AdminDashboardContent, RestaurantsContent, UsersContent } from '../components/Dashboard/AdiminOptions';
 
