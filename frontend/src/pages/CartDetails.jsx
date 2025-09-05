@@ -82,11 +82,11 @@ const CartDetails = () => {
           "/order/stripe/create-checkout-session",
           {
             products: cartData.items.map((item) => ({
-              foodItemId: item.foodItemId, // backend expects full foodItemId object
+              foodItemId: item.foodItemId, 
               quantity: item.quantity,
             })),
             resturentId: cartData.restaurantId,
-            address: deliveryAddress, // send address properly
+            address: deliveryAddress, 
           },
           {
             headers: {
@@ -118,7 +118,7 @@ const CartDetails = () => {
       toast.success("Order placed successfully!");
   
       // Clear cart after placing order
-      await axios.delete("http://localhost:8000/api/v1/cart/deleteCart",{
+      await axios.delete(`${API_BASE_URL}/cart/deleteCart`,{
         headers: {
           authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },

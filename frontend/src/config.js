@@ -1,1 +1,1 @@
-export const API_BASE_URL = "https://food-ordering-website-backend-9qth.onrender.com/api/v1";
+export const API_BASE_URL =import.meta.env.API_BASE_URL ||"http://localhost:8000/api/v1";

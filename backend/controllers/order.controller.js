@@ -159,8 +159,8 @@ export const checkout = asyncHandler(async (req, res) => {
     payment_method_types: ["card"],
     mode: "payment",
     line_items,
-    success_url: `${process.env.CLIENT_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: `${process.env.CLIENT_URL}/cancel`,
+    success_url: `${process.env.CLIENT_URL||"http://localhost:5173"}/success?session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url: `${process.env.CLIENT_URL||"http://localhost:5173"}/cancel`,
     metadata: {
       userId: req.user.toString(),
       resturentId: resturentId.toString(),
