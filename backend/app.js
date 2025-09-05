@@ -14,13 +14,23 @@ const app=express();
 dotenv.config();
 
 //middlewares...
-app.use(cors({
-  origin: [
-    "https://food-ordering-website-frontend-ru03.onrender.com", 
-    "http://localhost:5173"
-  ],
-  credentials: true
-}));
+const allowedOrigins = [
+  "http://localhost:5173", 
+  "https://food-ordering-website-frontend-ru03.onrender.com", 
+];
+
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use(cookieParser());
