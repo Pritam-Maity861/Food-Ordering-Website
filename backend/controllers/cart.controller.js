@@ -132,7 +132,7 @@ export const UpdateCart = asyncHandler(async (req, res) => {
   res.status(200).json(new ApiResponse(200, cart, "Cart updated successfully."));
 });
 
-/// Delete a food item from the user's cart
+// Delete a food item from the user's cart
 export const DeleteCartItems = asyncHandler(async (req, res) => {
   const userId = req.user;
   if (!userId) {
@@ -186,11 +186,9 @@ export const ClearCart = asyncHandler(async (req, res) => {
     throw new ApiError(401, "User not authenticated. Please login to continue.");
   }
 
-  const cart = await cartModel.findOne({ userId });
+  // const cart = await cartModel.findOne({ userId });
 
-  if (!cart) {
-    throw new ApiError(404, "Cart not found.");
-  }
+ 
 
   await cartModel.deleteOne({ userId });
 
