@@ -33,7 +33,7 @@ const OrderSuccess = () => {
         toast.success("Order placed successfully!");
 
         // Clear cart in backend
-        await axiosInstance.delete("/cart/deleteCart", { withCredentials: true });
+        await axiosInstance.delete("/cart/deleteCart");
 
         // Clear cart in frontend
         setTotalCartItems([]);

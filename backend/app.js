@@ -16,7 +16,6 @@ dotenv.config();
 //middlewares...
 const allowedOrigins = [
   "http://localhost:5173", 
-  "https://food-ordering-website-frontend-ru03.onrender.com", 
 ];
 
 app.use(

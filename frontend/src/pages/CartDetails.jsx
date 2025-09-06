@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from "react";
 import axiosInstance from "../utils/axiosInstance";
 import { CartContext } from "../context/cartContext/CartContext";
 import AddressForm from "../components/AddressForm";
-import axios from "axios";
+// import axios from "axios";
 import { toast } from "react-hot-toast";
 import {loadStripe} from '@stripe/stripe-js';
 import { API_BASE_URL } from "../config";
@@ -22,9 +22,7 @@ const CartDetails = () => {
   useEffect(() => {
     const fetchCartdata = async () => {
       try {
-        const { data } = await axios.get(`${API_BASE_URL}/cart/getCart`,
-        {headers: { authorization: `Bearer ${localStorage.getItem("accessToken")}` }}
-        );
+        const { data } = await axiosInstance.get(`/cart/getCart`);
         setCartData(data.data);
       } catch (error) {
         console.error("Error fetching cart:", error);
@@ -66,6 +64,8 @@ const CartDetails = () => {
       console.error("Error removing item:", error);
     }
   };
+
+ 
 
   const handlePlaceOrder = async () => {
     if (!deliveryAddress) {
@@ -118,12 +118,7 @@ const CartDetails = () => {
       toast.success("Order placed successfully!");
   
       // Clear cart after placing order
-      await axios.delete(`${API_BASE_URL}/cart/deleteCart`,{
-        headers: {
-          authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-        },
-        withCredentials: true,
-      });
+      await axiosInstance.delete(`/cart/deleteCart`);
 
       setCartData({ items: [] });
       await fetchCart();

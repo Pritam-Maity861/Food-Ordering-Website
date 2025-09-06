@@ -1,31 +1,27 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useContext } from "react";
 import { CartContext } from "./CartContext.js";
-// import axiosInstance from "../../utils/axiosInstance.js";
-import axios from "axios";
+// import axios from "axios";
 import { API_BASE_URL } from "../../config.js";
+import axiosInstance from "../../utils/axiosInstance.js";
+import { AuthContext } from "../AuthContext.js";
 
 const CartProvider = ({ children }) => {
   const [totalCartItems, setTotalCartItems] = useState([]);
+  const { isLoggedIn } = useContext(AuthContext); 
 
-  // fetch cart data
   const fetchCart = useCallback(async () => {
-    try {
-      const { data } = await axios.get(`${API_BASE_URL}/cart/getCart`
-        , { 
-          headers: {
-            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          },
-          withCredentials: true 
-        }
-      );
-      setTotalCartItems(data.data||[]);
-    } catch (error) {
-      console.error("Error fetching cart:", error);
+    if (isLoggedIn) {
+      try {
+        const { data } = await axiosInstance.get(`/cart/getCart`);
+        setTotalCartItems(data.data || []);
+      } catch (error) {
+        console.error("Error fetching cart:", error);
+      }
     }
-  }, []);
+  }, []);  
 
   useEffect(() => {
-    fetchCart();
+    fetchCart();  
   }, [fetchCart]);
 
   return (
