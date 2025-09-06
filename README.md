@@ -2,14 +2,14 @@
 
 A **full-stack multi-restaurant food ordering platform** built using the **MERN stack (MongoDB, Express.js, React, Node.js)**.  
 It supports **user authentication, restaurant & food item management, cart, order placement, and Stripe-based payments**.  
-The app has both **frontend (React + Vite)** and **backend (Express + MongoDB)** deployed on Render.
+The app has both **frontend (React + Vite)** and **backend (Express + MongoDB)** deployed frontend on netlify and backend on Render.
 
 ---
 
 ## 🚀 Live Demo
 
-👉 **[Frontend Live Link](https://food-ordering-website-frontend-ru03.onrender.com/)**  
-👉 **[Backend API Live Link](https://food-ordering-website-backend.onrender.com/)**  
+👉 **[Frontend Live Link](https://khaddoroshik.netlify.app/)**  
+👉 **[Backend API Live Link](https://food-ordering-website-backend-fh57.onrender.com)**  
 
 ---
 
@@ -127,6 +127,10 @@ backend/
 ```
 
 
+⭐️ Thanks for visiting my project! Feel free to explore the code and try out the live demo above.
+
+
 ---
+
 
 
