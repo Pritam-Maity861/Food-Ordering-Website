@@ -8,32 +8,33 @@ import { HashLink as Link } from "react-router-hash-link";
 const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
-  const nevigate = useNavigate();
-  const { isLoggedIn, setIsLoggedIn, user, isAdmin,isRestaurentOwner } = useContext(AuthContext);
-  const { totalCartItems,fetchCart } = useContext(CartContext);
+  const navigate = useNavigate();
 
-  const toggleProfileDropdown = () => {
-    setProfileDropdownOpen((prev) => !prev);
-  };
+  const { isLoggedIn, setIsLoggedIn, user, isAdmin, isRestaurentOwner } =
+    useContext(AuthContext);
+  const { totalCartItems, fetchCart } = useContext(CartContext);
 
   useEffect(() => {
-    const fetchdata=async() => {
-      await fetchCart();
-    }
-    fetchdata();
-  }, [])
-  
+    fetchCart();
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("user");
     setIsLoggedIn(false);
     setProfileDropdownOpen(false);
-    nevigate("/login");
+    setMobileMenuOpen(false);
+    navigate("/login");
   };
-  // console.log(isAdmin)
 
-  // console.log("These are the cart items :", totalCartItems);
+  const navigateConditionally = (path) => {
+    setMobileMenuOpen(false);
+    navigate(isLoggedIn ? path : "/login");
+  };
+
+  const toggleProfileDropdown = () => {
+    setProfileDropdownOpen((prev) => !prev);
+  };
 
   return (
     <div className="sticky top-0 left-0 w-full z-50">
@@ -46,132 +47,116 @@ const Navbar = () => {
       </div>
 
       {/* Navbar */}
-      <nav className="relative h-[70px] flex items-center justify-between px-6 md:px-16 lg:px-24 xl:px-32 py-4 text-gray-900 shadow transition-all bg-white/55">
+      <nav className="relative h-[70px] flex items-center justify-between px-6 md:px-16 lg:px-24 xl:px-32 py-4 text-gray-900 shadow bg-white/55">
         {/* Logo */}
         <img
           src={food_app_logo}
           alt="Food App Logo"
-          onClick={() => nevigate("/")}
+          onClick={() => navigate("/")}
           className="h-20 w-auto cursor-pointer"
         />
 
-        {/* Desktop Nav Links */}
-        <ul className="hidden md:flex items-center font-bold space-x-6 md:pl-28">
-          <li className="text-gray-600 hover:text-indigo-500 hover:border-b-2 border-indigo-500 transition">
-          <Link smooth to="/#home">Home</Link>
+        {/* Desktop Menu */}
+        <ul className="hidden md:flex items-center font-bold space-x-6">
+          <li className="hover:text-indigo-500">
+            <Link smooth to="/#home">Home</Link>
           </li>
-          <li className="text-gray-600 hover:text-indigo-500 hover:border-b-2 border-indigo-500 transition">
-            <button 
-            onClick={isLoggedIn?()=>nevigate("/allRestaurents"):()=>nevigate("/login")}
-            >Restaurants</button>
+          <li className="hover:text-indigo-500">
+            <button onClick={() => navigateConditionally("/allRestaurents")}>
+              Restaurants
+            </button>
           </li>
-          <li className="text-gray-600 hover:text-indigo-500 hover:border-b-2 border-indigo-500 transition">
-            <button 
-            onClick={isLoggedIn?()=>nevigate("/allFoods"):()=>nevigate("/login")}
-            >Our Foods</button>
+          <li className="hover:text-indigo-500">
+            <button onClick={() => navigateConditionally("/allFoods")}>
+              Our Foods
+            </button>
           </li>
-          <li className="text-gray-600 hover:text-indigo-500 hover:border-b-2 border-indigo-500 transition">
-          <Link smooth to="/#about">About Us</Link>
-
+          <li className="hover:text-indigo-500">
+            <Link smooth to="/#about">About Us</Link>
           </li>
-          <li className="text-gray-600 hover:text-indigo-500 hover:border-b-2 border-indigo-500 transition">
-          <Link smooth to="/#contact">Contact</Link>
+          <li className="hover:text-indigo-500">
+            <Link smooth to="/#contact">Contact</Link>
           </li>
         </ul>
 
-        {/* Desktop Right Side: Cart + Login/Profile */}
-        <div className="hidden md:flex justify-center items-center gap-10 relative">
+        {/* Right Side */}
+        <div className="hidden md:flex items-center gap-6">
           {/* Cart Icon */}
-          {isLoggedIn?(
+          {isLoggedIn && (
             <div
-            className="relative cursor-pointer"
-            onClick={() => nevigate("/Cart")}
-          >
-            <svg
-              width="18"
-              height="18"
-              viewBox="0 0 14 14"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
+              className="relative cursor-pointer"
+              onClick={() => navigate("/Cart")}
             >
-              <path
-                d="M.583.583h2.333l1.564 7.81a1.17 1.17 0 0 0 1.166.94h5.67a1.17 1.17 0 0 0 1.167-.94l.933-4.893H3.5m2.333 8.75a.583.583 0 1 1-1.167 0 .583.583 0 0 1 1.167 0m6.417 0a.583.583 0 1 1-1.167 0 .583.583 0 0 1 1.167 0"
-                stroke="#615fff"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-            {totalCartItems?.items?.length > 0 && (
-              <span className="absolute -top-2 -right-3 text-xs text-white bg-indigo-500 w-[18px] h-[18px] rounded-full flex items-center justify-center">
-                {totalCartItems.items.length}
-              </span>
-            )}
-          </div>
-          ):""}
+              <svg width="18" height="18" viewBox="0 0 14 14" fill="none">
+                <path
+                  d="M.583.583h2.333l1.564 7.81a1.17 1.17 0 0 0 1.166.94h5.67a1.17 1.17 0 0 0 1.167-.94l.933-4.893H3.5m2.333 8.75a.583.583 0 1 1-1.167 0 .583.583 0 0 1 1.167 0m6.417 0a.583.583 0 1 1-1.167 0 .583.583 0 0 1 1.167 0"
+                  stroke="#615fff"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              {totalCartItems?.items?.length > 0 && (
+                <span className="absolute -top-2 -right-3 text-xs text-white bg-indigo-500 w-[18px] h-[18px] rounded-full flex items-center justify-center">
+                  {totalCartItems.items.length}
+                </span>
+              )}
+            </div>
+          )}
 
+          {/* Profile / Auth */}
           {!isLoggedIn ? (
             <Link
-              type="button"
-              className="py-3 bg-slate-700 text-white text-center text-sm cursor-pointer hover:shadow-sm shadow-gray-700 rounded-full hover:scale-97 w-40 active:scale-95 transition"
-              to={"/login"}
+              to="/login"
+              className="py-3 px-6 bg-slate-700 text-white text-sm rounded-full hover:scale-95 transition"
             >
               Login / Signup
             </Link>
           ) : (
             <div className="relative">
               <img
-                src={user.profilePic}
+                src={user?.profilePic || "https://via.placeholder.com/100"}
                 alt="Profile"
-                className="w-10 h-10 rounded-full cursor-pointer"
+                className="w-10 h-10 rounded-full cursor-pointer object-cover"
                 onClick={toggleProfileDropdown}
               />
               {profileDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-50 bg-white rounded-md shadow-lg z-50">
+                <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-50">
                   <ul className="py-2 text-sm text-gray-700">
                     <li>
                       <Link
-                        to={"/myOrders"}
-                        className="block px-4 py-2 hover:bg-gray-100 transition"
+                        to="/myOrders"
+                        className="block px-4 py-2 hover:bg-gray-100"
+                        onClick={() => setProfileDropdownOpen(false)}
                       >
                         My Orders
                       </Link>
                     </li>
-                    {isAdmin && (
-                      <>
+                    {(isAdmin || isRestaurentOwner) && (
                       <li>
                         <Link
-                        to={"/adminDashboard"}
-                          className="block px-4 py-2 hover:bg-gray-100 transition"
+                          to="/restaurentDashboard"
+                          className="block px-4 py-2 hover:bg-gray-100"
+                          onClick={() => setProfileDropdownOpen(false)}
+                        >
+                          Restaurent Dashboard
+                        </Link>
+                      </li>
+                    )}
+                    {isAdmin && (
+                      <li>
+                        <Link
+                          to="/adminDashboard"
+                          className="block px-4 py-2 hover:bg-gray-100"
+                          onClick={() => setProfileDropdownOpen(false)}
                         >
                           Admin Dashboard
                         </Link>
                       </li>
-                      <li>
-                        <Link
-                        to={"/restaurentDashboard"}
-                          className="block px-4 w-full py-2 hover:bg-gray-100 transition"
-                        >
-                          Restaurent Dashboard
-                        </Link>
-                      </li>
-                    </>
-                    )}
-                    {isRestaurentOwner && (
-                      <>
-                      <li>
-                        <Link
-                        to={"/restaurentDashboard"}
-                          className="block px-4 w-full py-2 hover:bg-gray-100 transition"
-                        >
-                          Restaurent Dashboard
-                        </Link>
-                      </li>
-                    </>
                     )}
                     <li>
                       <button
                         onClick={handleLogout}
-                        className="block w-full text-left px-4 py-2 hover:bg-gray-100 transition"
+                        className="block w-full text-left px-4 py-2 hover:bg-gray-100"
                       >
                         Logout
                       </button>
@@ -183,166 +168,114 @@ const Navbar = () => {
           )}
         </div>
 
+        {/* Mobile Toggle */}
+        <div className="flex md:hidden items-center gap-4">
+          {/* Mobile Cart */}
+          {isLoggedIn && (
+            <div className="relative cursor-pointer" onClick={() => navigate("/Cart")}>
+              <svg width="18" height="18" viewBox="0 0 14 14" fill="none">
+                <path
+                  d="M.583.583h2.333l1.564 7.81a1.17 1.17 0 0 0 1.166.94h5.67a1.17 1.17 0 0 0 1.167-.94l.933-4.893H3.5m2.333 8.75a.583.583 0 1 1-1.167 0 .583.583 0 0 1 1.167 0m6.417 0a.583.583 0 1 1-1.167 0 .583.583 0 0 1 1.167 0"
+                  stroke="#615fff"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              {totalCartItems?.items?.length > 0 && (
+                <span className="absolute -top-2 -right-3 text-xs text-white bg-indigo-500 w-[18px] h-[18px] rounded-full flex items-center justify-center">
+                  {totalCartItems.items.length}
+                </span>
+              )}
+            </div>
+          )}
 
-
-
-        
-
-        {/* Mobile Menu Toggle */}
-        <div className="flex items-center gap-6 md:hidden">
-        <div className="sm:hidden ">
-        {isLoggedIn?(
-            <div
-            className="relative cursor-pointer"
-            onClick={() => nevigate("/Cart")}
+          {/* Hamburger Menu */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Toggle Menu"
           >
-            <svg
-              width="18"
-              height="18"
-              viewBox="0 0 14 14"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M.583.583h2.333l1.564 7.81a1.17 1.17 0 0 0 1.166.94h5.67a1.17 1.17 0 0 0 1.167-.94l.933-4.893H3.5m2.333 8.75a.583.583 0 1 1-1.167 0 .583.583 0 0 1 1.167 0m6.417 0a.583.583 0 1 1-1.167 0 .583.583 0 0 1 1.167 0"
-                stroke="#615fff"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
+            <svg width="30" height="30" viewBox="0 0 30 30">
+              <path d="M3 7a1 1 0 1 0 0 2h24a1 1 0 1 0 0-2zm0 7a1 1 0 1 0 0 2h24a1 1 0 1 0 0-2zm0 7a1 1 0 1 0 0 2h24a1 1 0 1 0 0-2z" />
             </svg>
-            {totalCartItems?.items?.length > 0 && (
-              <span className="absolute -top-2 -right-3 text-xs text-white bg-indigo-500 w-[18px] h-[18px] rounded-full flex items-center justify-center">
-                {totalCartItems.items.length}
-              </span>
-            )}
-          </div>
-          ):""}
-        </div>
-        <button
-          aria-label="menu-btn"
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="inline-block md:hidden active:scale-90 transition"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="30"
-            height="30"
-            viewBox="0 0 30 30"
-          >
-            <path d="M3 7a1 1 0 1 0 0 2h24a1 1 0 1 0 0-2zm0 7a1 1 0 1 0 0 2h24a1 1 0 1 0 0-2zm0 7a1 1 0 1 0 0 2h24a1 1 0 1 0 0-2z" />
-          </svg>
-        </button>
+          </button>
         </div>
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="absolute top-[70px] left-0 w-full bg-white flex flex-col items-center shadow-md px-6 py-6 md:hidden z-50 gap-4">
-            <ul className="flex flex-col w-full text-center space-y-4 text-gray-800 text-base">
+          <div className="absolute top-[70px] left-0 w-full bg-white shadow-md px-6 py-6 md:hidden z-50">
+            <ul className="flex flex-col items-center gap-4 text-gray-800 text-base">
               <li>
-                <Link
-                 smooth to="/#home"
-                  className="block hover:bg-slate-200 py-2 rounded transition"
-                >
-                  Home
-                </Link>
+                <Link smooth to="/#home" onClick={() => setMobileMenuOpen(false)}>Home</Link>
               </li>
               <li>
-                <Link
-                  to={"/allRestaurents"}
-                  className="block hover:bg-slate-200 py-2 rounded transition"
-                >
+                <button onClick={() => navigateConditionally("/allRestaurents")}>
                   Restaurants
-                </Link>
+                </button>
               </li>
               <li>
-                <Link
-                  to={"/allFoods"}
-                  className="block hover:bg-slate-200 py-2 rounded transition"
-                >
+                <button onClick={() => navigateConditionally("/allFoods")}>
                   Our Foods
-                </Link>
+                </button>
               </li>
               <li>
-                <Link
-                  smooth to="/#about"
-                  className="block hover:bg-slate-200 py-2 rounded transition"
-                >
-                  About Us
-                </Link>
+                <Link smooth to="/#about" onClick={() => setMobileMenuOpen(false)}>About Us</Link>
               </li>
               <li>
-                <Link
-                  smooth to="/#contact"
-                  className="block hover:bg-slate-200 py-2 rounded transition"
-                >
-                  Contact
-                </Link>
+                <Link smooth to="/#contact" onClick={() => setMobileMenuOpen(false)}>Contact</Link>
               </li>
             </ul>
 
+            {/* Auth Section */}
             {!isLoggedIn ? (
               <Link
-                type="button"
-                className="w-[80%] py-3 text-center bg-slate-700 text-white text-sm rounded-lg active:scale-95 transition"
-                to={"/login"}
+                to="/login"
+                className="block mt-4 py-3 text-center bg-slate-700 text-white rounded-md"
               >
                 Login / Signup
               </Link>
             ) : (
-              <div className="w-[80%] relative">
+              <div className="mt-4">
                 <button
-                  className="w-full py-3 bg-slate-700 text-white text-sm rounded-lg"
                   onClick={toggleProfileDropdown}
+                  className="w-full py-3 bg-slate-700 text-white rounded-md"
                 >
                   Profile
                 </button>
                 {profileDropdownOpen && (
-                  <div className="absolute left-0 mt-2 w-full bg-white rounded-md shadow-lg z-50">
+                  <div className="mt-2 w-full bg-white rounded-md shadow-md">
                     <ul className="py-2 text-sm text-gray-700">
                       <li>
-                        <Link
-                          to={"/myOrders"}
-                          className="block px-4 py-2 hover:bg-gray-100 transition"
-                        >
+                        <Link to="/myOrders" onClick={() => {
+                          setProfileDropdownOpen(false);
+                          setMobileMenuOpen(false);
+                        }} className="block px-4 py-2 hover:bg-gray-100">
                           My Orders
                         </Link>
                       </li>
-                      {isAdmin && (
-                        <>
+                      {(isAdmin || isRestaurentOwner) && (
                         <li>
-                          <Link
-                            to={"/adminDashboard"}
-                            className="block px-4 py-2 hover:bg-gray-100 transition"
-                          >
+                          <Link to="/restaurentDashboard" onClick={() => {
+                            setProfileDropdownOpen(false);
+                            setMobileMenuOpen(false);
+                          }} className="block px-4 py-2 hover:bg-gray-100">
+                            Restaurent Dashboard
+                          </Link>
+                        </li>
+                      )}
+                      {isAdmin && (
+                        <li>
+                          <Link to="/adminDashboard" onClick={() => {
+                            setProfileDropdownOpen(false);
+                            setMobileMenuOpen(false);
+                          }} className="block px-4 py-2 hover:bg-gray-100">
                             Admin Dashboard
                           </Link>
                         </li>
-                        <li>
-                          <Link 
-                          to={"/restaurentDashboard"}
-                            className="block px-4 py-2 hover:bg-gray-100 transition"
-                          >
-                            Restaurent Dashboard
-                          </Link>
-                        </li>
-                        </>
-                      )}
-                      {isRestaurentOwner && (
-                        <>
-                        <li>
-                          <Link
-                            to={"/restaurentDashboard"}
-                            className="block px-4 py-2 hover:bg-gray-100 transition"
-                          >
-                            Restaurent Dashboard
-                          </Link>
-                        </li>
-                        </>
                       )}
                       <li>
                         <button
                           onClick={handleLogout}
-                          className="block w-full text-left px-4 py-2 hover:bg-gray-100 transition"
+                          className="w-full text-left px-4 py-2 hover:bg-gray-100"
                         >
                           Logout
                         </button>
