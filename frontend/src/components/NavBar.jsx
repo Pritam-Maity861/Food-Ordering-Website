@@ -79,7 +79,6 @@ const Navbar = () => {
           </li>
         </ul>
 
-        {/* Desktop Right Side: Cart + Login/Profile */}
         <div className="hidden md:flex justify-center items-center gap-10 relative">
           {/* Cart Icon */}
           {isLoggedIn?(
@@ -248,7 +247,7 @@ const Navbar = () => {
               </li>
               <li>
                 <Link
-                  to={"/allRestaurents"}
+                  to={isLoggedIn?()=>nevigate("/allRestaurents"):()=>nevigate("/login")}
                   className="block hover:bg-slate-200 py-2 rounded transition"
                 >
                   Restaurants
@@ -256,7 +255,7 @@ const Navbar = () => {
               </li>
               <li>
                 <Link
-                  to={"/allFoods"}
+                  to={isLoggedIn?()=>nevigate("/allFoods"):()=>nevigate("/login")}
                   className="block hover:bg-slate-200 py-2 rounded transition"
                 >
                   Our Foods
