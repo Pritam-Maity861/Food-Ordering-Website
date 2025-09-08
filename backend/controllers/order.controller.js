@@ -145,7 +145,7 @@ export const checkout = asyncHandler(async (req, res) => {
 
   //  Create an order in DB with status = Pending
   const order = await orderModel.create({
-    userId: req.user._id,
+    userId: req.user,
     resturentId,
     items: products.map((p) => ({
       itemId: p.foodItemId._id,
