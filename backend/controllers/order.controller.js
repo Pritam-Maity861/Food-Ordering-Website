@@ -129,6 +129,7 @@ export const updateOrderStatus=asyncHandler(async (req,res) => {
 
 
 
+// Checkout controller
 export const checkout = asyncHandler(async (req, res) => {
   const { products, resturentId, address } = req.body;
 
@@ -142,6 +143,21 @@ export const checkout = asyncHandler(async (req, res) => {
     return acc + price * item.quantity;
   }, 0);
 
+  //  Create an order in DB with status = Pending
+  const order = await orderModel.create({
+    userId: req.user._id,
+    resturentId,
+    items: products.map((p) => ({
+      itemId: p.foodItemId._id,
+      quantity: p.quantity,
+    })),
+    totalAmount,
+    deliveryAddress: address,
+    paymentMethod: "Stripe",
+    paymentStatus: "Pending",
+  });
+
+  //  Stripe line items
   const line_items = products.map((item) => ({
     price_data: {
       currency: "usd",
@@ -159,31 +175,20 @@ export const checkout = asyncHandler(async (req, res) => {
     payment_method_types: ["card"],
     mode: "payment",
     line_items,
-    success_url: `${process.env.CLIENT_URL||"http://localhost:5173"}/success?session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: `${process.env.CLIENT_URL||"http://localhost:5173"}/cancel`,
+    success_url: `${process.env.CLIENT_URL || "http://localhost:5173"}/success?session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url: `${process.env.CLIENT_URL || "http://localhost:5173"}/cancel`,
     metadata: {
-      userId: req.user.toString(),
-      resturentId: resturentId.toString(),
-      items: JSON.stringify(
-        products.map((p) => ({
-          itemId: p.foodItemId._id,
-          quantity: p.quantity,
-        }))
-      ),
-      deliveryAddress: JSON.stringify(address),
-      totalAmount: totalAmount.toString(),
+      orderId: order._id.toString(), 
     },
   });
 
-  return res
-    .status(200)
-    .json(new ApiResponse(200, { url: session.url }, "Checkout session created"));
+  return res.status(200).json(
+    new ApiResponse(200, { url: session.url }, "Checkout session created")
+  );
 });
 
 
-//verify stripe payment...
-
-
+//  Verify Stripe Payment
 export const verifyStripePayment = async (req, res) => {
   try {
     const { sessionId } = req.body;
@@ -191,32 +196,23 @@ export const verifyStripePayment = async (req, res) => {
       return res.status(400).json({ success: false, message: "Session ID is required" });
     }
 
-    // Retrieve the checkout session from Stripe
     const session = await stripe.checkout.sessions.retrieve(sessionId, {
       expand: ["payment_intent"],
     });
 
     if (session.payment_status === "paid") {
-      let order = await orderModel.findOne({ _id: session.metadata.orderId });
+      const order = await orderModel.findById(session.metadata.orderId);
 
-      if (order) {
-        order.paymentStatus = "Completed";
-        await order.save();
-      } else {
-        order = await orderModel.create({
-          userId: session.metadata.userId,
-          resturentId: session.metadata.resturentId,
-          items: JSON.parse(session.metadata.items),
-          totalAmount: Number(session.metadata.totalAmount),
-          deliveryAddress: JSON.parse(session.metadata.deliveryAddress),
-          paymentMethod: "Stripe",
-          paymentStatus: "Completed",
-        });
+      if (!order) {
+        return res.status(404).json({ success: false, message: "Order not found" });
       }
+
+      order.paymentStatus = "Completed";
+      await order.save();
 
       return res.json({
         success: true,
-        message: "Payment verified & order placed successfully",
+        message: "Payment verified & order updated successfully",
         order,
       });
     } else {
@@ -227,10 +223,11 @@ export const verifyStripePayment = async (req, res) => {
     }
   } catch (error) {
     console.error(error);
-    res
-      .status(500)
-      .json({ success: false, message: "Server Error", error: error.message });
+    res.status(500).json({
+      success: false,
+      message: "Server Error",
+      error: error.message,
+    });
   }
 };
-
 
