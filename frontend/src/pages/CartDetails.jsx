@@ -104,6 +104,7 @@ const CartDetails = () => {
       }
   
       // COD fallback
+     else{
       const { data } = await axiosInstance.post("/order/placeOrder", {
         resturentId: cartData.restaurantId,
         items: cartData.items.map((item) => ({
@@ -116,6 +117,7 @@ const CartDetails = () => {
   
       setOrderMessage(data.message);
       toast.success("Order placed successfully!");
+     }
   
       // Clear cart after placing order
       await axiosInstance.delete(`/cart/deleteCart`);

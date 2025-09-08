@@ -103,7 +103,6 @@ const Navbar = () => {
             </div>
           )}
 
-          {/* Profile / Auth */}
           {!isLoggedIn ? (
             <Link
               to="/login"
